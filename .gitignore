@@ -2,6 +2,7 @@
 *.pot
 *.pyc
 *.db
+*.sqlite3
 *.mo
 .AppleDouble
 .DS_Store
