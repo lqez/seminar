@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load tz %}
 {% load crispy_forms_tags %}
 
 {% block title %}
@@ -8,39 +9,89 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12 content">
-        <h1>{{ event.title }}</h1>
-        {{ event.desc }}
-        <h2>Register</h2>
+        <div class="page-header">
+            <h1>{{ event.title }}</h1>
+            <p>참가 제한 : {{ event.capacity }}명</p>
+            <p>신청 기간 : 
+                {{ event.available_from|date:"Y-m-d H:i" }}(KST) 부터
+                {{ event.available_to|date:"Y-m-d H:i" }}(KST) 까지
+            </p>
+        </div>
+        {% if warning %}
+        <div class="alert alert-danger" role="alert">{{ warning }}</div>
+        {% endif %}
+        {% if event.available %}
+        <h2>참가 신청하기</h2>
         {% crispy form %}
+        {% else %}
+            {% if event.available_from > now %}
+                <h2>참가 신청기간 종료</h2>
+                <div class="alert alert-info" role="info">
+                    대기자 분들은 세미나 시작 1시간 전까지 입금해주시면 등록이 완료됩니다.
+                </div>
+            {% else %}
+                <h2>참가 신청이 시작되지 않았습니다.</h2>
+                <div class="alert alert-info" role="info">
+                    {{ event.available_from|date:"Y-m-d H:i" }}(KST) 부터 참가 신청이 가능합니다. 
+                </div>
+            {% endif %}
+        {% endif %}
+        <h2>세미나 정보</h2>
+        {{ event.desc|safe }}
     </div>
 </div>
+<hr>
 <div class="row">
     <div class="col-md-6 content">
-        <h3>Submitted list</h3>
-        {% if attendees.submitted %}
-        <ul>
-        {% for attendee in attendees.submitted %}
-            <li>
-                {{ attendee.name }} / {{ attendee.secret_email }}
-            </li>
-        {% endfor %}
-        </ul>
+        <h3>참여자 목록 (입금 완료순)</h3>
+        {% if attendees.approved %}
+        <p>총 {{ attendees.approved|length }} 명</p>
+        <table class="table table-condensed table-striped">
+            <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>이메일</th>
+                    <th>입금 시간</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for attendee in attendees.approved %}
+                <tr>
+                    <th>{{ attendee.name }}</th>
+                    <td>{{ attendee.secret_email }}</td>
+                    <td>{{ attendee.approved|date:"Y-m-d H:i:s" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {% else %}
-        None
+        아직 없습니다.
         {% endif %}
     </div>
     <div class="col-md-6 content">
-        <h3>Approved list</h3>
-        {% if attendees.approved %}
-        <ul>
-        {% for attendee in attendees.approved %}
-            <li>
-                {{ attendee.name }} / {{ attendee.secret_email }}
-            </li>
-        {% endfor %}
-        </ul>
+        <h3>대기자 목록</h3>
+        {% if attendees.submitted %}
+        <p>총 {{ attendees.submitted|length }} 명</p>
+        <table class="table table-condensed table-striped">
+            <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>이메일</th>
+                    <th>등록 시간</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for attendee in attendees.submitted %}
+                <tr>
+                    <th>{{ attendee.name }}</th>
+                    <td>{{ attendee.secret_email }}</td>
+                    <td>{{ attendee.created|date:"Y-m-d H:i:s" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {% else %}
-        None
+        아직 없습니다.
         {% endif %}
     </div>
 </div>

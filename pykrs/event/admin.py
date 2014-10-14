@@ -1,8 +1,9 @@
 from django.contrib import admin
+from django_summernote.admin import SummernoteModelAdmin
 from .models import Event, Attendee
 
 
-class EventAdmin(admin.ModelAdmin):
+class EventAdmin(SummernoteModelAdmin):
     list_display = ('id', 'title', 'capacity', 'available_from',
                     'available_to',)
     ordering = ('id',)
