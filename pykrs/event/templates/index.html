@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{{ event.title }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 content">
+        <h1>{{ event.title }}</h1>
+        {{ event.desc }}
+        <h2>Register</h2>
+        {% crispy form %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 content">
+        <h3>Submitted list</h3>
+        {% if attendees.submitted %}
+        <ul>
+        {% for attendee in attendees.submitted %}
+            <li>
+                {{ attendee.name }} / {{ attendee.secret_email }}
+            </li>
+        {% endfor %}
+        </ul>
+        {% else %}
+        None
+        {% endif %}
+    </div>
+    <div class="col-md-6 content">
+        <h3>Approved list</h3>
+        {% if attendees.approved %}
+        <ul>
+        {% for attendee in attendees.approved %}
+            <li>
+                {{ attendee.name }} / {{ attendee.secret_email }}
+            </li>
+        {% endfor %}
+        </ul>
+        {% else %}
+        None
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
