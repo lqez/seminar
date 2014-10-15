@@ -52,6 +52,7 @@
                     <th>이름</th>
                     <th>이메일</th>
                     <th>입금 시간</th>
+                    <th>메모</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,6 +61,12 @@
                     <th>{{ attendee.name }}</th>
                     <td>{{ attendee.secret_email }}</td>
                     <td>{{ attendee.approved|date:"Y-m-d H:i:s" }}</td>
+                    <td>
+                        {% if attendee.note %}
+                        <button type="button" class="btn btn-default btn-xs note"
+                            data-toggle="tooltip" title="{{ attendee.note }}">비고</button>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -95,4 +102,9 @@
         {% endif %}
     </div>
 </div>
+<script>
+$(function() {
+    $('.note').tooltip();
+});
+</script>
 {% endblock %}

@@ -59,6 +59,7 @@ class Attendee(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     approved = models.DateTimeField(blank=True, null=True)
+    note = models.CharField(max_length=200, blank=True, null=True)
 
     @property
     def secret_email(self):

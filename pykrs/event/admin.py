@@ -12,7 +12,7 @@ admin.site.register(Event, EventAdmin)
 
 class AttendeeAdmin(admin.ModelAdmin):
     list_display = ('id', 'event', 'email', 'name', 'status', 'checkkey',
-                    'created', 'approved')
+                    'created', 'approved', 'note',)
     readonly_fields = ('checkkey',)
     ordering = ('id',)
 admin.site.register(Attendee, AttendeeAdmin)
